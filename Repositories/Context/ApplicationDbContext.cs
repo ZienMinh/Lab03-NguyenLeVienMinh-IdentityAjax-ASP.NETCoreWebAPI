@@ -25,11 +25,22 @@ namespace Repositories.Context
 		{
 			base.OnModelCreating(optionsBuilder);
 
-			optionsBuilder.Entity<Product>()
-				.HasOne(p => p.User)
-				.WithMany(u => u.Products) 
-				.HasForeignKey(p => p.UserId)
-				.OnDelete(DeleteBehavior.Cascade);
+			//optionsBuilder.Entity<Product>()
+			//	.HasOne(p => p.User)
+			//	.WithMany(u => u.Products) 
+			//	.HasForeignKey(p => p.UserId)
+			//	.OnDelete(DeleteBehavior.Cascade);
+
+			optionsBuilder.Entity<Product>(entity =>
+			{
+				entity.HasOne(p => p.User)
+					.WithMany(u => u.Products)
+					.HasForeignKey(p => p.UserId)
+					.OnDelete(DeleteBehavior.Cascade);
+
+				entity.Property(p => p.UnitPrice)
+					.HasPrecision(18, 2);
+			});
 
 			optionsBuilder.Entity<Category>().HasData(
 				new Category { CategoryId = 1, CategoryName = "Beverages" },

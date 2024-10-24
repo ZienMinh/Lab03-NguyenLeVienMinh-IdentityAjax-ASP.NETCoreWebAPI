@@ -1,0 +1,49 @@
+﻿version: '3.8'
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Port=3306;Database=PRN231_Lab03_ProjectManagement;User=root;Password=Purejoy@123#
+      - PORT=${PORT:-8080}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ElasticConfiguration__Uri=http://elasticsearch:9200
+      - ElasticConfiguration__Username=elastic
+      - ElasticConfiguration__Password=Vieenm0612
+    networks:
+      - app-network
+      - shared-elastic-network
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=caching_sha2_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "Purejoy@123#"
+      MYSQL_DATABASE: "PRN231_Lab03_ProjectManagement"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
+  shared-elastic-network:
+    external: true

@@ -12,24 +12,11 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 	{
 		private readonly IProductService _productService;
 		private readonly IElasticClient _elasticClient;
+
 		public ProductController(IProductService productService, IElasticClient elasticClient)
 		{
 			_productService = productService;
 			_elasticClient = elasticClient;
-		}
-
-		[HttpGet("elastic-connection")]
-		public async Task<IActionResult> ElasticConnection()
-		{
-			var pingResponse = await _elasticClient.PingAsync();
-			if (pingResponse.IsValid)
-			{
-				return Ok("Connected to Elasticsearch successfully");
-			}
-			else
-			{
-				return StatusCode(500, $"Failed to connect to Elasticsearch: {pingResponse.DebugInformation}");
-			}
 		}
 
 		// GET: api/products
@@ -114,7 +101,21 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 			return BadRequest(response.Message); // 400 Bad Request with error message
 		}
 
-		[HttpGet("search/products")]
+		[HttpGet("elastic")]
+		public async Task<IActionResult> ElasticConnection()
+		{
+			var pingResponse = await _elasticClient.PingAsync();
+			if (pingResponse.IsValid)
+			{
+				return Ok("Connected to Elasticsearch successfully");
+			}
+			else
+			{
+				return StatusCode(500, $"Failed to connect to Elasticsearch: {pingResponse.DebugInformation}");
+			}
+		}
+
+		[HttpGet("elastic/products")]
 		public async Task<IActionResult> SearchProducts([FromQuery] string? name, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice)
 		{
 			var products = await _productService.SearchProductAsync(name, minPrice, maxPrice);
@@ -129,6 +130,7 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 		}
 
 		[HttpPost("documents")]
+		[Authorize(Roles = "ADMIN")]
 		public async Task<IActionResult> CreateDocuments()
 		{
 			var documents = await _productService.CreateProductDocumentsAsync();

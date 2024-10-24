@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI", "Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI.csproj", "{1B3EB3E5-4893-48A1-9710-4445BF00AD36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI", "Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI.csproj", "{1B3EB3E5-4893-48A1-9710-4445BF00AD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{ED5AAF32-D421-49F3-A690-5E6B6F73642F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{ED5AAF32-D421-49F3-A690-5E6B6F73642F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{EE9E77AD-9019-4BC7-9D50-921115534695}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{EE9E77AD-9019-4BC7-9D50-921115534695}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{D4DC9820-71BB-4CC1-8297-0062B75D1740}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{D4DC9820-71BB-4CC1-8297-0062B75D1740}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

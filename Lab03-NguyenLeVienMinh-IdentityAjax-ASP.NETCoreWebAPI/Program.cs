@@ -16,16 +16,14 @@ using PRN231.ExploreNow.BusinessObject.Entities;
 using BusinessObjects.Entities;
 using Serilog.Sinks.Elasticsearch;
 using Serilog;
-using System.Numerics;
 using System.Reflection;
-using Elasticsearch.Net;
 using Nest;
 using Serilog.Exceptions;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Configure DbContext
-// Add Identity and configure Identity options
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
@@ -33,7 +31,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
 	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-	options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+	var serverVersion = new MySqlServerVersion(new Version(8, 0, 28));
+	options.UseMySql(connectionString, serverVersion)
+		.LogTo(Console.WriteLine, LogLevel.Information)
+		.EnableSensitiveDataLogging()
+		.EnableDetailedErrors();
 });
 #endregion
 
@@ -43,7 +45,6 @@ var jwtSettings = builder.Configuration.GetSection("JWT");
 builder.Services
 	.AddAuthentication(options =>
 	{
-		// options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 		options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 	})
@@ -123,10 +124,6 @@ builder.Services.AddSwaggerGen(options =>
 	});
 });
 
-//builder.Services.AddControllers().AddJsonOptions(options =>
-//{
-//	options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-//});
 #endregion
 
 #region Configure CORS
@@ -146,7 +143,6 @@ builder.Services.AddCors(p =>
 #endregion
 
 #region Config ElasticSearch
-
 builder.Services.AddSingleton<IElasticClient>(provider =>
 {
 	var configuration = provider.GetRequiredService<IConfiguration>();
@@ -161,6 +157,7 @@ builder.Services.AddSingleton<IElasticClient>(provider =>
 	// Create ElasticClient without specifying default index
 	return new ElasticClient(settings);
 });
+
 void ConfigureLogging()
 {
 	var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -218,8 +215,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -240,4 +235,24 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+// Database initialization
+using (var scope = app.Services.CreateScope())
+{
+	var services = scope.ServiceProvider;
+	try
+	{
+		var context = services.GetRequiredService<ApplicationDbContext>();
+		Console.WriteLine("Attempting to ensure database is created...");
+		context.Database.EnsureCreated();
+		Console.WriteLine("Database created successfully");
+	}
+	catch (Exception ex)
+	{
+		Console.WriteLine($"An error occurred while creating the database: {ex.Message}");
+		Console.WriteLine($"Stack trace: {ex.StackTrace}");
+	}
+}
+
+//app.Run();
+string port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");

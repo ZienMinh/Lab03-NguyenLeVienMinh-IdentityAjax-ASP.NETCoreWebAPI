@@ -1,0 +1,17 @@
+﻿D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Context\ApplicationDbContext.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Context\BaseDbContext.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Migrations\20241009171451_InitialCreate.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Migrations\20241009171451_InitialCreate.Designer.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Migrations\ApplicationDbContextModelSnapshot.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\BaseRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\CategoryRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\Interfaces\ICategoryRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\Interfaces\IProductRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\Interfaces\IRefreshTokenRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\Interfaces\IUserRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\ProductRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\RefreshTokenRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\Repositories\UserRepository.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\UnitOfWorks\BaseUnitOfWork.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\UnitOfWorks\IUnitOfWork.cs
+D:\PRN231\Lab03-NguyenLeVienMinh-IdentityAjax-ASP.NETCoreWebAPI\Repositories\UnitOfWorks\UnitOfWork.cs

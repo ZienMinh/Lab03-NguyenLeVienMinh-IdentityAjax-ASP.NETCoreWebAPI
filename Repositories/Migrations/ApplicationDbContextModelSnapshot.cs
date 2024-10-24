@@ -106,7 +106,8 @@ namespace Repositories.Migrations
                         .HasColumnType("varchar(40)");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(65,30)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UnitsInStock")
                         .HasColumnType("int");

@@ -114,7 +114,7 @@ namespace Repositories.Repositories
 						{
 							b.Must(m => m.Range(r => r
 								.Field(f => f.UnitPrice)
-								.GreaterThanOrEquals((double?)minPrice.Value) 
+								.GreaterThanOrEquals((double?)minPrice.Value)
 								.LessThanOrEquals((double?)maxPrice.Value)));
 						}
 						return b;
