@@ -19,19 +19,6 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 			_elasticClient = elasticClient;
 		}
 
-		// GET: api/products
-		[HttpGet]
-		[Authorize]
-		public async Task<IActionResult> GetAllProducts()
-		{
-			var response = await _productService.GetProducts();
-			if (response.IsSucceed)
-			{
-				return Ok(response.Result);
-			}
-			return BadRequest(response.Message); // 400 Bad Request with error message
-		}
-
 		// GET: api/products/{id}
 		[HttpGet("{id}")]
 		[Authorize(Roles = "ADMIN")]
@@ -116,9 +103,14 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 		}
 
 		[HttpGet("elastic/products")]
-		public async Task<IActionResult> SearchProducts([FromQuery] string? name, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice)
+		public async Task<IActionResult> SearchProducts(
+			[FromQuery(Name = "product-name")] string? name,
+			[FromQuery(Name = "min-price")] decimal? minPrice,
+			[FromQuery(Name = "max-price")] decimal? maxPrice,
+			[FromQuery(Name = "page-number")] int pageNumber = 1,
+			[FromQuery(Name = "page-size")] int pageSize = 10)
 		{
-			var products = await _productService.SearchProductAsync(name, minPrice, maxPrice);
+			var products = await _productService.SearchProductAsync(name, minPrice, maxPrice, pageNumber, pageSize);
 
 			if (products != null && products.Any())
 			{
@@ -133,14 +125,15 @@ namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 		[Authorize(Roles = "ADMIN")]
 		public async Task<IActionResult> CreateDocuments()
 		{
-			var documents = await _productService.CreateProductDocumentsAsync();
+			var result = await _productService.CreateProductDocumentsAsync();
+			var count = await _productService.GetDocumentCount();
 
-			if (documents.Contains("Products indexed successfully"))
+			return Ok(new
 			{
-				return Ok(documents); // 200 OK with success message
-			}
-
-			return BadRequest(documents);
+				Message = result,
+				DocumentCount = count,
+				Timestamp = DateTime.UtcNow
+			});
 		}
 	}
 }

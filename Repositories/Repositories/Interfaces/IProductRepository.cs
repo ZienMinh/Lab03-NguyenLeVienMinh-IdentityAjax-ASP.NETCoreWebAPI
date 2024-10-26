@@ -10,7 +10,8 @@ namespace BusinessObjects.Contracts.Repositories
 		Task CreateProduct(Product product);
 		Task UpdateProduct(Product product);
 		Task DeleteProduct(Product product);
-		Task<List<Product>> SearchProductAsync(string? name, decimal? minPrice, decimal? maxPrice);
+		Task<List<Product>> SearchProductAsync(string? name, decimal? minPrice, decimal? maxPrice, int pageNumber = 1, int pageSize = 10);
 		Task<string> CreateProductDocumentsAsync();
+		Task<long> GetDocumentCount();
 	}
 }

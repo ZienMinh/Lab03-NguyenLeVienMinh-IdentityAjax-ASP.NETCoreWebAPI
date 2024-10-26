@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Services.Services
 {
-	public class JwtService
+	public class JwtService : IJwtService
 	{
 		private readonly IConfiguration _config;
 
@@ -45,29 +46,6 @@ namespace Services.Services
 
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
-
-		//// Generates an access token with user claims, including role
-		//public string GenerateAccessToken(string userId, string role)
-		//{
-		//	var claims = new[]
-		//	{
-		//		new Claim(JwtRegisteredClaimNames.Sub, userId),
-		//		new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-		//		new Claim(ClaimTypes.Role, role) // Add role claim
-  //          };
-
-		//	var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Secret"]));
-		//	var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-		//	var token = new JwtSecurityToken(
-		//		issuer: _config["JwtSettings:Issuer"],
-		//		audience: _config["JwtSettings:Audience"],
-		//		claims: claims,
-		//		expires: DateTime.UtcNow.AddMinutes(30),
-		//		signingCredentials: creds);
-
-		//	return new JwtSecurityTokenHandler().WriteToken(token);
-		//}
 
 		// Generates a secure random refresh token
 		public string GenerateRefreshToken()

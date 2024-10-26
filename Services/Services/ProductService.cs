@@ -1,4 +1,5 @@
-﻿using BusinessObjects.Contracts.UnitOfWorks;
+﻿using BusinessObjects.Contracts.Repositories;
+using BusinessObjects.Contracts.UnitOfWorks;
 using BusinessObjects.Entities;
 using BusinessObjects.Models.Request;
 using BusinessObjects.Models.Response;
@@ -25,7 +26,7 @@ namespace Services.Services
 		{
 			try
 			{
-				var products = await _unitOfWork.ProductRepository.GetProducts();
+				var products = await _unitOfWork.GetRepository<IProductRepository>().GetProducts();
 				return new BaseResponse<List<Product>>
 				{
 					IsSucceed = true,
@@ -47,7 +48,7 @@ namespace Services.Services
 		{
 			try
 			{
-				var product = await _unitOfWork.ProductRepository.GetProductWithCategoryById(id);
+				var product = await _unitOfWork.GetRepository<IProductRepository>().GetProductWithCategoryById(id);
 				//var productResponseMap = MapToProductResponse(product);
 
 				return new BaseResponse<Product>
@@ -87,11 +88,11 @@ namespace Services.Services
 				productRequestMap.CreatedBy = user.UserName;
 				productRequestMap.CreatedDate = DateTime.UtcNow;
 
-				await _unitOfWork.ProductRepository.CreateProduct(productRequestMap);
+				await _unitOfWork.GetRepository<IProductRepository>().CreateProduct(productRequestMap);
 				await _unitOfWork.SaveChangesAsync();
 
 				// Get ProductId  when client create Product 
-				var productWithCategory = await _unitOfWork.ProductRepository.GetProductWithCategoryById(productRequestMap.ProductId);
+				var productWithCategory = await _unitOfWork.GetRepository<IProductRepository>().GetProductWithCategoryById(productRequestMap.ProductId);
 
 				if (productWithCategory == null)
 				{
@@ -155,7 +156,7 @@ namespace Services.Services
 		{
 			try
 			{
-				var existingProduct = await _unitOfWork.ProductRepository.GetProductWithCategoryById(id);
+				var existingProduct = await _unitOfWork.GetRepository<IProductRepository>().GetProductWithCategoryById(id);
 
 				if (existingProduct == null)
 				{
@@ -171,7 +172,7 @@ namespace Services.Services
 				existingProduct.UnitsInStock = productRequest.UnitsInStock;
 				existingProduct.CategoryId = productRequest.CategoryId;
 
-				await _unitOfWork.ProductRepository.UpdateProduct(existingProduct);
+				await _unitOfWork.GetRepository<IProductRepository>().UpdateProduct(existingProduct);
 				await _unitOfWork.SaveChangesAsync();
 
 				return new BaseResponse<Product>
@@ -195,7 +196,7 @@ namespace Services.Services
 		{
 			try
 			{
-				await _unitOfWork.ProductRepository.DeleteProduct(product);
+				await _unitOfWork.GetRepository<IProductRepository>().DeleteProduct(product);
 				await _unitOfWork.SaveChangesAsync();
 				return new BaseResponse<bool>
 				{
@@ -214,14 +215,19 @@ namespace Services.Services
 			}
 		}
 
-		public async Task<List<Product>> SearchProductAsync(string? name, decimal? minPrice, decimal? maxPrice)
+		public async Task<List<Product>> SearchProductAsync(string? name, decimal? minPrice, decimal? maxPrice, int pageNumber = 1, int pageSize = 10)
 		{
-			return await _unitOfWork.ProductRepository.SearchProductAsync(name, minPrice, maxPrice);
+			return await _unitOfWork.GetRepository<IProductRepository>().SearchProductAsync(name, minPrice, maxPrice, pageNumber, pageSize);
 		}
 
 		public async Task<string> CreateProductDocumentsAsync()
 		{
-			return await _unitOfWork.ProductRepository.CreateProductDocumentsAsync();
+			return await _unitOfWork.GetRepository<IProductRepository>().CreateProductDocumentsAsync();
+		}
+
+		public async Task<long> GetDocumentCount()
+		{
+			return await _unitOfWork.GetRepository<IProductRepository>().GetDocumentCount();
 		}
 	}
 }

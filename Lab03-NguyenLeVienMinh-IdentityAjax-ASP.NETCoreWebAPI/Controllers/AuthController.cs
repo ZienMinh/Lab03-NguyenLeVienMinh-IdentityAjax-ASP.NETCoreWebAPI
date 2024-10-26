@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Lab03_NguyenLeVienMinh_IdentityAjax_ASP.NETCoreWebAPI.Controllers
 {
-	[Route("api/auth")]
+	[Route("api/auths")]
 	[ApiController]
 	public class AuthController : ControllerBase
 	{

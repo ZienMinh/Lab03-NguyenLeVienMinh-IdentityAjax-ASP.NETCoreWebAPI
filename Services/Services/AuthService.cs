@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using PRN231.ExploreNow.BusinessObject.Entities;
+using Repositories.Repositories.Interfaces;
 using Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,14 +24,14 @@ namespace Services.Services
 		private readonly ILogger<AuthService> _logger;
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly UserManager<ApplicationUser> _userManager;
-		private readonly JwtService _jwtService;
+		private readonly IJwtService _jwtService;
 		private readonly IUnitOfWork _unitOfWork;
 
 		public AuthService(UserManager<ApplicationUser> userManager,
 						   RoleManager<IdentityRole> roleManager,
 						   ILogger<AuthService> logger,
 						   IConfiguration configuration,
-						   JwtService jwtService,
+						   IJwtService jwtService,
 						   IUnitOfWork unitOfWork)
 		{
 			_userManager = userManager;
@@ -173,14 +174,14 @@ namespace Services.Services
 			new("email", user.Email)
 			};
 
-			foreach (var userRole in userRoles) 
+			foreach (var userRole in userRoles)
 				authClaims.Add(new Claim(ClaimTypes.Role, userRole));
 
 			var token = _jwtService.GenerateAccessToken(user.Id, userRoles);
 			var refreshToken = _jwtService.GenerateRefreshToken();
 
 			// Save the refresh token
-			await _unitOfWork.RefreshTokenRepository.AddAsync(new RefreshToken
+			await _unitOfWork.GetRepository<IRefreshTokenRepository>().AddAsync(new RefreshToken
 			{
 				Token = refreshToken,
 				UserId = user.Id,
@@ -307,14 +308,14 @@ namespace Services.Services
 				throw new SecurityTokenException("Invalid access token claims.");
 			}
 
-			var tokenEntry = await _unitOfWork.RefreshTokenRepository.GetQueryable().FirstOrDefaultAsync(rt => rt.Token == refresh.RefreshToken && rt.UserId == userId);
+			var tokenEntry = await _unitOfWork.GetRepository<IRefreshTokenRepository>().GetQueryable().FirstOrDefaultAsync(rt => rt.Token == refresh.RefreshToken && rt.UserId == userId);
 			if (tokenEntry == null || tokenEntry.ExpiryDate < DateTime.UtcNow)
 			{
 				throw new SecurityTokenException("Invalid or expired refresh token.");
 			}
 
 			// Optionally, revoke the old refresh token
-			_unitOfWork.RefreshTokenRepository.Delete(tokenEntry);
+			_unitOfWork.GetRepository<IRefreshTokenRepository>().Delete(tokenEntry);
 
 			// Generate new tokens
 			var user = await _userManager.FindByIdAsync(userId);
@@ -330,7 +331,7 @@ namespace Services.Services
 			var newRefreshToken = _jwtService.GenerateRefreshToken();
 
 			// Save the new refresh token
-			await _unitOfWork.RefreshTokenRepository.AddAsync(new RefreshToken
+			await _unitOfWork.GetRepository<IRefreshTokenRepository>().AddAsync(new RefreshToken
 			{
 				Token = newRefreshToken,
 				UserId = user.Id,
